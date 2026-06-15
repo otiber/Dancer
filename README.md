@@ -100,6 +100,7 @@ underlying language model, configured once via environment variables
 ```
 New Version/
 ├── run_bpic_experiment.py     # Main entry point — all campaigns
+├── make_figures.py             # Generates all paper figures + LaTeX table from result CSVs
 ├── core/
 │   ├── models.py               # Pydantic schemas: Proposal, Bid, UtilityVector, RunResult
 │   ├── agents.py                # IPAgent: private constraints + utility function L_k(p)
@@ -128,6 +129,7 @@ New Version/
 │   └── visualization.py           # Figure generation for the paper
 ├── data/                           # Place input event logs here (not version-controlled)
 ├── outputs/                        # Generated CSV/LaTeX artefacts (not version-controlled)
+│   └── figures/                    # PDF figures + LaTeX table from make_figures.py
 ├── requirements.txt
 └── .env                            # Local LLM/API configuration (not version-controlled)
 ```
@@ -317,12 +319,61 @@ All artefacts are written to `--out-dir` (default `outputs/bpic/`):
 | `--dropsweep` | `robustness_raw.csv`, `robustness_summary.csv` | Per-episode and per-drop-rate completion rates. |
 | `--scaling` | `scaling_raw.csv`, `scaling_summary.csv` | Per-episode and per-(system, agent-count) message-count statistics. |
 
-`analysis/visualization.py` consumes these CSV files to produce the figures
-referenced in the accompanying paper.
+Run `make_figures.py` (§10) on these CSV files to produce every figure and
+the LaTeX table referenced in the accompanying paper.
 
 ---
 
-## 10. Reproducibility notes
+## 10. Generating figures and tables
+
+`make_figures.py` consumes the CSV artefacts from §9 and renders every
+figure and LaTeX table used in the paper, via `analysis/statistics.py` and
+`analysis/visualization.py`. It never fabricates data: the main results CSV
+is required, while a missing ablation/robustness/scaling CSV simply causes
+its dependent figure(s) to be skipped with a loud notice.
+
+```bash
+python make_figures.py \
+    --results outputs/bpic/bpic_results_raw.csv \
+    --ablation outputs/bpic/ablation_raw.csv \
+    --robustness outputs/bpic/robustness_raw.csv \
+    --scaling outputs/bpic/scaling_raw.csv \
+    --out-dir outputs/figures
+```
+
+If every campaign in §8 was run with the default `--out-dir outputs/bpic`,
+these are also the script's defaults, so it can be run with no arguments:
+
+```bash
+python make_figures.py
+```
+
+Useful flags:
+- `--out-dir outputs/figures` — output directory for all figures and the
+  LaTeX table (created if missing).
+- `--caption "..."` — caption for the generated LaTeX results table
+  (default: `"DANCER Real-Log Evaluation on BPIC 2019"`).
+
+| File | Contents |
+|---|---|
+| `fig1_completion_rate.pdf` | Completion rate (%) per scenario × system. |
+| `fig2_utility_boxplots.pdf` | Distribution of final utility for successful runs, per system. |
+| `fig3_rounds_cdf.pdf` | CDF of rounds-to-consensus for DANCER across scenarios. |
+| `fig4_heatmap.pdf` | Heatmap of completion rate: systems × scenarios. |
+| `fig5_significance.pdf` | −log10(p) significance of DANCER vs. each baseline. |
+| `fig6_scaling.pdf` | Message complexity vs. agent count for DANCER, CNP, ζ-CNP. |
+| `fig7_robustness.pdf` | Completion rate vs. message-drop probability for DANCER. |
+| `fig8_ablation.pdf` | Rounds + utility, DANCER-LLM vs. DANCER-Heuristic (paired). |
+| `fig9_radar.pdf` | Radar chart comparing systems across five capability dimensions. |
+| `fig10_pareto.pdf` | Completion rate vs. average LLM tokens (economic efficiency frontier). |
+| `fig11_latency.pdf` | Per-episode wall-clock latency across systems. |
+| `fig12_rounds_scenario.pdf` | Mean rounds to consensus per system and disruption scenario. |
+| `bpic_results_table.tex` | LaTeX summary table for the paper (overwrites the §9 copy). |
+| `cr_feasible_breakdown.csv` | Feasibility-adjusted completion rate (only if `oracle_feasible` is present in the results CSV). |
+
+---
+
+## 11. Reproducibility notes
 
 - All scenario sampling, agent-availability draws, and message-drop
   simulation are derived from `--seed` (default `42`) via per-episode seeded
@@ -337,7 +388,7 @@ referenced in the accompanying paper.
 
 ---
 
-## 11. References
+## 12. References
 
 - Smith, R. G. (1980). *The Contract Net Protocol: High-Level Communication
   and Control in a Distributed Problem Solver*. IEEE Transactions on
