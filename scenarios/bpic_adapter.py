@@ -69,7 +69,6 @@ except ImportError:
     _PM4PY_OK = False
     warnings.warn("pm4py not installed. Install with: pip install pm4py")
 
-# ── Project imports ───────────────────────────────────────────────────────────
 import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from core.agents import IPAgent
@@ -80,9 +79,8 @@ except ImportError:
     _DC_OK = False
 
 
-# ══════════════════════════════════════════════════════════════════════════════
+
 #  Data structures
-# ══════════════════════════════════════════════════════════════════════════════
 
 @dataclass
 class AgentProfile:
@@ -126,9 +124,7 @@ class DisruptionCase:
     raw_attributes: Dict = field(default_factory=dict)
 
 
-# ══════════════════════════════════════════════════════════════════════════════
 #  Log classification rules
-# ══════════════════════════════════════════════════════════════════════════════
 
 # BPIC 2019 specific activity → disruption type mapping
 # Based on domain knowledge from the dataset description
@@ -203,9 +199,7 @@ def _infer_disruption_type(
     return None
 
 
-# ══════════════════════════════════════════════════════════════════════════════
 #  Core Adapter
-# ══════════════════════════════════════════════════════════════════════════════
 
 class BPICAdapter:
     """
@@ -262,7 +256,6 @@ class BPICAdapter:
         # Disruption rules for this log type
         self._rules = _BPIC2019_DISRUPTION_RULES   # extend per log_type if needed
 
-    # ── Public API ────────────────────────────────────────────────────────────
 
     def fit(self) -> "BPICAdapter":
         """Full pipeline: load → discover → conform → profile."""
@@ -609,7 +602,6 @@ class BPICAdapter:
 
         print(f"[adapter] Profiled {len(self.agent_profiles)} agent groups.")
 
-    # ── Scenario builder ──────────────────────────────────────────────────────
 
     def _case_to_scenario(
         self,
