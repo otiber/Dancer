@@ -1,0 +1,13 @@
+python run_bpic_experiment.py --log data/BPIChallenge2019.xes --probe-llm
+
+# 1. Main campaign (~7 systems × 3 types × 100)
+python run_bpic_experiment.py --log data/BPIChallenge2019.xes --iters 100 --seed 42
+
+# 2. Paired ablation (real Fig. 8) — structural by default; add types if budget allows
+python run_bpic_experiment.py --log data/BPIChallenge2019.xes --ablation --iters 100 --ablation-types structural_failure parametric_fluctuation sovereignty_conflict
+
+# 3. Drop-rate robustness (real Fig. 7)
+python run_bpic_experiment.py --log data/BPIChallenge2019.xes --dropsweep --drop-iters 50
+
+# 4. Message scaling (real Fig. 6)
+python run_bpic_experiment.py --log data/BPIChallenge2019.xes --scaling

@@ -1,0 +1,14 @@
+# Secrets / local configuration
+.env
+
+# Event logs (large; download separately, see README)
+data/*.xes
+data/*.xes.gz
+
+# Generated experiment artefacts
+outputs/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
