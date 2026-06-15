@@ -48,8 +48,6 @@ SC_LABEL = {
 DISRUPTION_TYPES = list(SC_LABEL.keys())
 
 
-# ── DANCER wrapper: protocol commit + canonical outcome ───────────────────────
-
 def _dancer_row(sc, agents, active, registry, dtype, tau_min, i,
                 domain_context=None, llm_backend="real",
                 drop_rate: float = 0.0) -> dict:
@@ -190,8 +188,6 @@ def _run_cell(system, runner, scenarios_meta, sc_label, dtype, ctx, workers):
     return cell_rows
 
 
-# ── Main comparison campaign ──────────────────────────────────────────────────
-
 def campaign_main(args, adapter: BPICAdapter) -> pd.DataFrame:
     systems = [s.strip() for s in args.systems.split(",")]
     ctx = getattr(adapter, "domain_context", None)
@@ -224,8 +220,6 @@ def campaign_main(args, adapter: BPICAdapter) -> pd.DataFrame:
 
     return pd.DataFrame(all_rows)
 
-
-# ── Ablation campaign (F7): paired DANCER-LLM vs DANCER-Heuristic ────────────
 
 def campaign_ablation(args, adapter: BPICAdapter) -> pd.DataFrame:
     """REAL paired ablation replacing the synthetic Fig. 8 generator.
@@ -269,7 +263,6 @@ def campaign_ablation(args, adapter: BPICAdapter) -> pd.DataFrame:
     return df
 
 
-# ── Drop-rate robustness sweep (F7): real Fig. 7 ─────────────────────────────
 
 def campaign_dropsweep(args, adapter: BPICAdapter) -> pd.DataFrame:
     ctx = getattr(adapter, "domain_context", None)
@@ -293,7 +286,6 @@ def campaign_dropsweep(args, adapter: BPICAdapter) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-# ── Scaling experiment (F7): real Fig. 6 ──────────────────────────────────────
 
 def campaign_scaling(args, adapter: BPICAdapter) -> pd.DataFrame:
     """Messages-per-episode vs. number of peer agents, with REAL episodes.
@@ -343,7 +335,6 @@ def campaign_scaling(args, adapter: BPICAdapter) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-# ── LLM decoding probe (audit F10) ───────────────────────────────────────────
 
 def probe_llm(args, adapter) -> None:
     """Diagnose whether the endpoint honours sampling, and whether outputs
@@ -400,8 +391,6 @@ def probe_llm(args, adapter) -> None:
     else:
         print("  >>> episode sensitivity OK.")
 
-
-# ── Orchestration ─────────────────────────────────────────────────────────────
 
 def main() -> None:
     args = parse_args()
