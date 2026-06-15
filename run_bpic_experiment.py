@@ -1,22 +1,5 @@
 """
 run_bpic_experiment.py — DANCER evaluation grounded in real BPMN event logs.
-REVISED (audit 2026-06). Changes vs. the original runner:
-
-  F2  DANCER receives the adapter's DomainContext (real-log vocabulary) and
-      its LLM context is privacy-preserving (lead-only; see llm/prompts.py).
-  F3  Every system is judged under the CANONICAL criterion (core/evaluation):
-      tau_min is now passed to ALL runners; DANCER's recorded success is
-      protocol-commit AND canonical.
-  F7  --ablation runs the REAL paired DANCER-LLM vs DANCER-Heuristic
-      comparison on identical scenarios (replaces the synthetic Fig. 8).
-      --dropsweep runs the REAL message-drop robustness sweep (replaces the
-      synthetic Fig. 7). --scaling runs the REAL O(n) message experiment
-      (replaces the synthetic Fig. 6).
-  F8  Synthetic-log fallback requires explicit --allow-synthetic; every
-      episode row records the source case_id (sovereignty-pool provenance).
-  F9  Scenario matrices are constructed up-front in the main thread from the
-      per-episode seeded RNG; thread-pool parallelism affects only LLM calls.
-
 Usage:
     python run_bpic_experiment.py --log data/BPIChallenge2019.xes --iters 100
     python run_bpic_experiment.py --log data/BPIChallenge2019.xes --ablation --iters 100
