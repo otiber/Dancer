@@ -1,7 +1,6 @@
 """
 make_figures.py — Generate all paper figures and the LaTeX table from REAL
-result CSVs. No synthetic fallbacks: a missing CSV simply skips its figure
-with a loud notice (never fabricates data).
+result CSVs. 
 
 Usage (from the project root, after the campaigns):
     python make_figures.py --results outputs/bpic/bpic_results_raw.csv \
